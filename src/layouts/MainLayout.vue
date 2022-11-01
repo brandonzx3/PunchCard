@@ -32,7 +32,7 @@
 			</div>
 
 			<div v-if="state.user.is_coach" style="padding: 1em;">
-				awd
+				Coach Control Panel Here
 			</div>
 		</q-drawer>
 

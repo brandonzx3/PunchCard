@@ -1,11 +1,11 @@
 <template>
   <q-page class="flex flex-center column" v-if="state.user != null">
-    <q-btn size="10em" :loading="loading_handle > 0" color="primary" @click="checkin">{{ state.user?.checked_in === true ? "Check Out" : "Check In" }}</q-btn>
+    <q-btn size="7em" :loading="loading_handle > 0" color="primary" @click="checkin">{{ state.user?.checked_in === true ? "Check Out" : "Check In" }}</q-btn>
     <span style="color:red" v-if="checkin_error != null">{{checkin_error}}</span>
   </q-page>
 
   <q-page class="flex flex-center column" v-if="state.user == null">
-    <h3>Ironclad Attendance</h3>
+    <h4>Ironclad Attendance</h4>
     <q-input :error="input_id_error != null" :error-message="input_id_error" :disable="loading_handle > 0" label="Student ID" v-model="input_id" />
     <q-btn :loading="loading_handle > 0" style="margin-top: 1em;" color="primary" @click="login">Log In</q-btn>
     <span style="color:red" v-if="login_error != null">{{login_error}}</span>
