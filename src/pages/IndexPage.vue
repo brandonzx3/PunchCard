@@ -14,6 +14,7 @@
 
   <audio :src="checkin_sound_url" ref="checkin_sound" />
   <audio :src="checkout_sound_url" ref="checkout_sound" />
+  {{this.poll_user()}}
 </template>
 
 <script>
@@ -60,7 +61,6 @@ export default defineComponent({
       }
       finally {
         this.loading_handle--;
-        this.poll_user();
       }
     },
 
