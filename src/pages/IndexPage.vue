@@ -35,7 +35,7 @@ export default defineComponent({
   } },
 
   computed: {
-    state() { return state; }
+    state() { return state; },
   },
 
   methods: {
@@ -60,6 +60,7 @@ export default defineComponent({
       }
       finally {
         this.loading_handle--;
+        this.poll_user();
       }
     },
 
@@ -84,6 +85,21 @@ export default defineComponent({
       finally {
         this.loading_handle--;
       }
+    },
+
+    async poll_user() {
+      if(state.user != null) {
+        this.clear_errors();
+        try {
+          const login = await fetch(state.endpoint + `?action=get_user&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
+          if(login.success) {
+            this.state.user = login.result;
+          }
+        } catch(e) {
+          console.log(e)
+        }
+      }
+      setTimeout(this.poll_user, 1000 * 20);
     },
 
     clear_errors() {
