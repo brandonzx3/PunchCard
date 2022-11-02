@@ -57,6 +57,7 @@ export default defineComponent({
 	methods: {
 		async logout() {
 			state.user = null;
+			localStorage.setItem("user", null);
 		}
 	},
 
