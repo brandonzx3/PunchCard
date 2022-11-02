@@ -22,6 +22,22 @@ import state from "../state.js";
 import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
 
+
+async function poll_user() {
+  if(state.user != null) {
+    try {
+      const login = await fetch(state.endpoint + `?action=get_user&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
+      if(login.success && state.logged_in) {
+        state.user = login.result;
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+  setTimeout(poll_user, 1000 * 30)
+}
+poll_user();
+
 export default defineComponent({
   name: "IndexPage",
   data() { return {
@@ -36,7 +52,6 @@ export default defineComponent({
 
   computed: {
     state() { return state; },
-    
   },
 
   methods: {
@@ -53,6 +68,7 @@ export default defineComponent({
         const login = await fetch(state.endpoint + `?action=get_user&user_id=${encodeURIComponent(id)}`).then(res => res.json());
         if (login.success) {
           this.state.user = login.result;
+          this.state.logged_in = true;
         } else {
           this.login_error = login.error;
         }
