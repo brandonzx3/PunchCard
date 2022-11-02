@@ -27,8 +27,7 @@
 		>
 			<div style="padding: 1em">
 				<h5 style="text-align: center; margin: 0;">Welcome Back {{state.user.display_name}}!</h5>
-				<p style="color: gray; text-align: center; margin-bottom: 0;">User ID: {{state.user.user_id}}</p>
-				<p style="text-align: center;">you have {{state.user.total_hours}} total hours</p>
+				<p style="color: gray; text-align: center;">User ID: {{state.user.user_id}}</p>
 				<q-btn color="red" @click="logout">log out</q-btn>
 			</div>
 

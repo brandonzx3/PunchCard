@@ -1,6 +1,7 @@
 <template>
   <q-page class="flex flex-center column" v-if="state.user != null">
-    <h4>{{state.user?.checked_in === true ? "Currently Checked In." : "Currently Checked Out."}}</h4>
+    <h4 style="margin-bottom: 10px;">{{state.user?.checked_in === true ? "Currently Checked In." : "Currently Checked Out."}}</h4>
+    <h5 style="margin-top: 0;">you have {{state.user.total_hours}} total hours</h5>
     <q-btn size="7em" :loading="loading_handle > 0" color="primary" @click="checkin">{{ state.user?.checked_in === true ? "Check Out" : "Check In" }}</q-btn>
     <span style="color:red" v-if="checkin_error != null">{{checkin_error}}</span>
   </q-page>
