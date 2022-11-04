@@ -54,28 +54,34 @@ function main(is_post, e) {
     }
     //Append an object literal to the end of a sheet, specified by a lookup group
     function append_row(lookup_group, values) {
-        let row = null;
+        const row = [];
+        let the_sheet = null;
         for (field in lookup_group) {
             const [sheet, col] = lookup_group[field];
-            if (row == null) row = sheet.getLastRow() + 1;
-            const sanity_check = get_value([sheet, col], row);
-            if (sanity_check != null && sanity_check !== "") throw "Tried to append into a row with data in it";
-            set_value([sheet, col], row, values[field] ?? "");
+            the_sheet = sheet;
+            const i = col - 1;
+            while (row.length <= i) row.push("");
+            row[i] = values[field];
         }
+        the_sheet.appendRow(row);
     }
 
-    //Compiles a user object from a user id
-    function get_user(user_id) {
-        const users = query_as_string(lookup.users.user_id, user_id);
-        if (users.length === 0) return null;
-        else if (users.length > 1) throw "There is more than one user for user " + user_id;
-        const row = users[0];
+    //Compiles a user object from a row index
+    function get_user_by_row(row) {
         const user = {};
         for (field in lookup.users) {
             user[field] = get_value(lookup.users[field], row);
         }
         user.row = row;
         return user;
+    }
+    //Compiles a user object from a user id
+    function get_user(user_id) {
+        const users = query_as_string(lookup.users.user_id, user_id);
+        if (users.length === 0) return null;
+        else if (users.length > 1) throw "There is more than one user for user " + user_id;
+        const row = users[0];
+        return get_user_by_row(row);
     }
 
     //Appends a new entry to the log
@@ -115,6 +121,14 @@ function main(is_post, e) {
         });
     }
 
+    //Toggles the `checked_in` for a user, and adds an entry to the log
+    function toggle_checkin(user) {
+        user.checked_in = typeof user.checked_in === "boolean" ? !user.checked_in : true;
+        set_value(lookup.users.checked_in, user.row, user.checked_in);
+        append_log(user.user_id);
+        return user;
+    }
+
     const get_actions = {
 
         get_user: function(e) {
@@ -126,10 +140,15 @@ function main(is_post, e) {
 
         toggle_checkin: function(e) {
             const user = get_actions.get_user(e);
-            user.checked_in = typeof user.checked_in === "boolean" ? !user.checked_in : true;
-            set_value(lookup.users.checked_in, user.row, user.checked_in);
-            append_log(user.user_id);
-            return user;
+            return toggle_checkin(user);
+        },
+
+        end_practice: function(e) {
+            const checked_in_users = query(lookup.users.checked_in, true);
+            const checked_out_users = checked_in_users
+                .map(row => get_user_by_row(row))
+                .map(user => toggle_checkin(user));
+            return checked_out_users;
         },
 
     };
