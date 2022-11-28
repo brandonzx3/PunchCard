@@ -24,7 +24,6 @@ import state from "../state.js";
 import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
 
-
 async function poll_user() {
   if(state.user != null) {
     try {
@@ -79,6 +78,7 @@ export default defineComponent({
       }
       finally {
         this.loading_handle--;
+        localStorage.setItem("user", id);
       }
     },
 
@@ -111,5 +111,25 @@ export default defineComponent({
       this.input_id_error = null;
     },
   },
+  
+  async created () {
+    if(localStorage.getItem("user") != null) {
+      this.loading_handle++;
+      try {
+        const login = await fetch(state.endpoint + `?action=get_user&user_id=${encodeURIComponent(localStorage.getItem("user"))}`).then(res => res.json());
+        if (login.success) {
+          this.state.user = login.result;
+          this.state.logged_in = true;
+        } else {
+          this.login_error = login.error;
+        }
+      } catch(e) {
+        this.login_error = e.toString() + "\n" + e.stack;
+      }
+      finally {
+        this.loading_handle--;
+      }
+    }
+  }
 })
 </script>

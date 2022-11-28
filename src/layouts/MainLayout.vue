@@ -75,6 +75,7 @@ export default defineComponent({
 		async logout() {
 			this.state.user = null;
 			this.state.logged_in = false;
+			localStorage.clear();
 		},
 
 		async end_practice() {
