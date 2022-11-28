@@ -70,6 +70,7 @@ export default defineComponent({
         if (login.success) {
           this.state.user = login.result;
           this.state.logged_in = true;
+          localStorage.setItem("user", id);
         } else {
           this.login_error = login.error;
         }
@@ -78,7 +79,6 @@ export default defineComponent({
       }
       finally {
         this.loading_handle--;
-        localStorage.setItem("user", id);
       }
     },
 
