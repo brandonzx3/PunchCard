@@ -27,12 +27,18 @@
 		>
 			<div id="drawer">
 				<h5 style="text-align: center; margin: 0;">{{state.user.display_name}}</h5>
-				<p style="color: gray; text-align: center;">User ID: {{state.user.user_id}}</p>
+				<p style="color: gray; text-align: center; margin-bottom: 0;">User ID: {{state.user.user_id}}</p>
+				<p style="color: gray; text-align: center;">
+					Total Time: 
+					{{state.user.total_hours}} Hours, 
+					{{Math.floor((state.user.total_seconds - (state.user.total_hours * 3600)) / 60)}} Minutes, 
+					{{state.user.total_seconds - (state.user.total_hours * 3600) - (Math.floor((state.user.total_seconds - (state.user.total_hours * 3600)) / 60) * 60)}} Seconds
+				</p>
 				<q-btn color="red" @click="logout">log out</q-btn>
 				<template v-if="state.user.is_coach" >
 					<h6 style="margin: 1em">Coach &amp; Mentor Settings</h6>
-					<q-btn @click="end_practice" color="primary" :loading="end_practice_loading_handle > 0">End Practace</q-btn>
-					<span style="color:red" v-if="end_practice_error != null">{{end_practice_error}}</span>
+					<q-btn @click="end_practice" color="primary" :loading="loading_handle > 0">End Practace</q-btn>
+					<span style="color:red" v-if="error != null">{{error}}</span>
 				</template>
 			</div>
 
@@ -67,8 +73,8 @@ export default defineComponent({
 	},
 
 	data() { return {
-		end_practice_loading_handle: 0,
-		end_practice_error: null,
+		loading_handle: 0,
+		error: null,
 	} },
 
 	methods: {
@@ -79,7 +85,7 @@ export default defineComponent({
 		},
 
 		async end_practice() {
-			this.end_practice_loading_handle++;
+			this.loading_handle++;
 			try {
 				const op = await fetch(state.endpoint + `?action=end_practice&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
 				if (op.success) {
@@ -91,13 +97,13 @@ export default defineComponent({
 						message: op.result.length == 0 ? undefined : ("The following students were signed out: " + op.result.map(user => user.full_name).join("; ")),
 					});
 				} else {
-					this.end_practice_error = op.error;
+					this.error = op.error;
 				}
 			} catch(e) {
 				console.log(e);
-				this.end_practice_error = e.toString() + "\n" + e.stack;
+				this.error = e.toString() + "\n" + e.stack;
 			} finally {
-				this.end_practice_loading_handle--;
+				this.loading_handle--;
 			}
 		},
 

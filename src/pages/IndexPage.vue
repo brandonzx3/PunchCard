@@ -35,7 +35,7 @@ async function poll_user() {
       console.log(e);
     }
   }
-  setTimeout(poll_user, 1000 * 60);
+  setTimeout(poll_user, 1000 * 20);
 }
 poll_user();
 
