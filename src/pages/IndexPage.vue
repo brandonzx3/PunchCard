@@ -35,9 +35,12 @@ async function poll_user() {
       console.log(e);
     }
   }
-  setTimeout(poll_user, 1000 * 20);
 }
-poll_user();
+
+async function poll_loop() {
+  poll_user();
+  setTimeout(poll_loop, 1000 * 60);
+}
 
 export default defineComponent({
   name: "IndexPage",
@@ -89,9 +92,12 @@ export default defineComponent({
         const checkin = await fetch(state.endpoint + `?action=toggle_checkin&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
         if (checkin.success) {
           this.state.user = checkin.result;
+          poll_user();
           if (this.state.user.checked_in) {
+            this.$refs.checkin_sound.volume = 0.1;
             this.$refs.checkin_sound.play();
           } else {
+            this.$refs.checkout_sound.volume = 0.1;
             this.$refs.checkout_sound.play();
           }
         } else {

@@ -34,9 +34,10 @@
 					{{Math.floor((state.user.total_seconds - (state.user.total_hours * 3600)) / 60)}} Minutes, 
 					{{state.user.total_seconds - (state.user.total_hours * 3600) - (Math.floor((state.user.total_seconds - (state.user.total_hours * 3600)) / 60) * 60)}} Seconds
 				</p>
-				<q-btn color="red" @click="logout">log out</q-btn>
+				<q-btn color="red" @click="logout">log out</q-btn>	
 				<template v-if="state.user.is_coach" >
 					<h6 style="margin: 1em">Coach &amp; Mentor Settings</h6>
+					<a style="margin-bottom: 16px;" href="https://script.google.com/home/projects/15PbQQR0Ac9YbxxnsoQcv2ly1muj_BP14BZTdmXTI_mBFT1iB922V23eq">Backend Analytics</a>
 					<q-btn @click="end_practice" color="primary" :loading="loading_handle > 0">End Practace</q-btn>
 					<span style="color:red" v-if="error != null">{{error}}</span>
 				</template>
