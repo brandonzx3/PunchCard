@@ -38,8 +38,10 @@
 				<template v-if="state.user.is_coach" >
 					<h6 style="margin: 1em">Coach &amp; Mentor Settings</h6>
 					<a style="margin-bottom: 16px;" href="https://script.google.com/home/projects/15PbQQR0Ac9YbxxnsoQcv2ly1muj_BP14BZTdmXTI_mBFT1iB922V23eq">Backend Analytics</a>
-					<q-btn @click="end_practice" color="primary" :loading="loading_handle > 0">End Practace</q-btn>
-					<span style="color:red" v-if="error != null">{{error}}</span>
+					<q-btn @click="get_checkedin" color="primary" :loading="loading_handle > 0">See Checkin-In Users</q-btn>
+					<span style="color:red" v-if="get_checkin_error != null">{{get_checkin_error}}</span>
+					<q-btn style="margin-top: 16px" @click="end_practice"  color="primary" :loading="loading_handle > 0">End Practice</q-btn>
+					<span style="color:red" v-if="end_practice_error != null">{{end_practice_error}}</span>
 				</template>
 			</div>
 
@@ -75,7 +77,8 @@ export default defineComponent({
 
 	data() { return {
 		loading_handle: 0,
-		error: null,
+		end_practice_error: null,
+		get_checkin_error: null,
 	} },
 
 	methods: {
@@ -86,6 +89,7 @@ export default defineComponent({
 		},
 
 		async end_practice() {
+			this.clear_errors();
 			this.loading_handle++;
 			try {
 				const op = await fetch(state.endpoint + `?action=end_practice&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
@@ -95,10 +99,10 @@ export default defineComponent({
 					}
 					Dialog.create({
 						title: "Practice ended",
-						message: op.result.length == 0 ? undefined : ("The following students were signed out: " + op.result.map(user => user.full_name).join("; ")),
+						message: op.result.length == 0 ? "Nobody was checked out" : ("The following students were signed out: " + op.result.map(user => user.full_name).join("; ")),
 					});
 				} else {
-					this.error = op.error;
+					this.end_practice_error = op.error;
 				}
 			} catch(e) {
 				console.log(e);
@@ -108,8 +112,30 @@ export default defineComponent({
 			}
 		},
 
+		async get_checkedin() {
+			this.clear_errors()
+			this.loading_handle++;
+			try {
+				const op = await fetch(state.endpoint + `?action=get_checkedin&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
+				if (op.success) {
+					Dialog.create({
+						title: "Checked-In Users",
+						message: op.result.length == 0 ? "No one is signed in." : ("The following students are signed in: " + op.result.map(user => user.full_name).join("; ")),
+					});
+				} else {
+					this.get_checkin_error = op.error;
+				} 
+			} catch(e) {
+				console.log(e);
+				this.error = e.toString() + "\n" + e.stack;
+			} finally {
+				this.loading_handle--;
+			}
+		},
+
 		clear_errors() {
-			end_practice_error = null;
+			this.end_practice_error = null;
+			this.get_checkin_error = null;
 		}
 	},
 

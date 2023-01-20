@@ -1,4 +1,4 @@
-if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "2") throw new Error("hardlock diff");
+if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "4") throw new Error("hardlock diff");
 
 function main(is_post, e) {
 
@@ -149,6 +149,11 @@ function main(is_post, e) {
                 .map(row => get_user_by_row(row))
                 .map(user => toggle_checkin(user));
             return checked_out_users;
+        },
+
+        get_checkedin: function(e) {
+            return query(lookup.users.checked_in, true)
+                .map(row => get_user_by_row(row))
         },
 
     };
