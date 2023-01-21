@@ -3,7 +3,7 @@ import { reactive } from "vue";
 const state = reactive({
     user: null,
     logged_in: false,
-    endpoint: "https://script.google.com/macros/s/AKfycbzpavJFnwlJdQDqhc3C7frgJzvEfp5IW-c6G04SqOqq2JM4D2pI4iCud8DQ-h57Kks/exec"
+    endpoint: "https://script.google.com/macros/s/AKfycbwQz6HrQIoZfXm5fpbbtoB9yguVG7LtXgNLseLfzIxNnVMwBi1N_BKKuMhw7Z9Tpph8/exec"
 });
 
 export default state;

@@ -40,8 +40,12 @@
 					<a style="margin-bottom: 16px;" href="https://script.google.com/home/projects/15PbQQR0Ac9YbxxnsoQcv2ly1muj_BP14BZTdmXTI_mBFT1iB922V23eq">Backend Analytics</a>
 					<q-btn @click="get_checkedin" color="primary" :loading="loading_handle > 0">See Checkin-In Users</q-btn>
 					<span style="color:red" v-if="get_checkin_error != null">{{get_checkin_error}}</span>
+
 					<q-btn style="margin-top: 16px" @click="end_practice"  color="primary" :loading="loading_handle > 0">End Practice</q-btn>
 					<span style="color:red" v-if="end_practice_error != null">{{end_practice_error}}</span>
+
+					<q-btn style="margin-top: 16px" @click="get_students"  color="primary" :loading="loading_handle > 0">Get User Data</q-btn>
+					<span style="color:red" v-if="get_student_error != null">{{get_student_error}}</span>
 				</template>
 			</div>
 
@@ -79,6 +83,7 @@ export default defineComponent({
 		loading_handle: 0,
 		end_practice_error: null,
 		get_checkin_error: null,
+		get_student_error: null,
 	} },
 
 	methods: {
@@ -133,9 +138,35 @@ export default defineComponent({
 			}
 		},
 
+		async get_students() {
+			this.clear_errors()
+			this.loading_handle++;
+			try {
+				const op = await fetch(state.endpoint + `?action=get_students&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
+				if (op.success) {
+					let sorted = op.result.sort((a, b) => {
+						return b.total_hours - a.total_hours
+					});
+					Dialog.create({
+						title: "User Data",
+						html: true,
+						message: op.result.length == 0 ? "somehting went wrong" : (sorted.map(user => `${user.full_name}: ${user.total_hours} hours`).join("<br/>")),
+					});
+				} else {
+					this.get_student_error = op.error;
+				} 
+			} catch(e) {
+				console.log(e);
+				this.error = e.toString() + "\n" + e.stack;
+			} finally {
+				this.loading_handle--;
+			}
+		},
+
 		clear_errors() {
 			this.end_practice_error = null;
 			this.get_checkin_error = null;
+			this.get_student_error = null;
 		}
 	},
 

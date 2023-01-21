@@ -156,6 +156,15 @@ function main(is_post, e) {
                 .map(row => get_user_by_row(row))
         },
 
+        get_students: function(e) {
+            return query(lookup.users.is_coach, false)
+                .map(row => get_user_by_row(row))
+        },
+
+        get_coaches: function(e) {
+            return query(lookup.users.is_coach, true)
+                .map(row => get_user_by_row(row))
+        },
     };
     const post_actions = {
 
