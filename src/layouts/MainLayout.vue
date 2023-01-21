@@ -148,9 +148,9 @@ export default defineComponent({
 						return b.total_hours - a.total_hours
 					});
 					Dialog.create({
-						title: "User Data",
+						title: "Student Data",
 						html: true,
-						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length} <br/><br/>` + sorted.map(user => `${user.full_name}: ${user.total_hours} hours`).join("<br/>"),
+						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length}` + sorted.map(user => `<div style="background-color:#eaecee;  border-radius: 25px; padding: 10px; margin-top: 10px;">${user.full_name}:<br/>User ID: ${user.user_id}<br/>Total Hours ${user.total_hours}</div>`).join(""),
 					});
 				} else {
 					this.get_student_error = op.error;

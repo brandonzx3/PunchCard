@@ -3,7 +3,7 @@
     <h4>Welcome Back {{state.user.display_name}}!</h4>
     <h4 style="margin-bottom: 10px;">{{state.user?.checked_in === true ? "Currently Checked In." : "Currently Checked Out."}}</h4>
     <h5 style="margin-top: 0;">you have {{state.user.total_hours}} total hours</h5>
-    <q-btn size="7em" :loading="loading_handle > 0" color="primary" @click="checkin">{{ state.user?.checked_in === true ? "Check Out" : "Check In" }}</q-btn>
+    <q-btn size="5em" :loading="loading_handle > 0" color="primary" @click="checkin">{{ state.user?.checked_in === true ? "Check Out" : "Check In" }}</q-btn>
     <span style="color:red" v-if="checkin_error != null">{{checkin_error}}</span>
   </q-page>
 
