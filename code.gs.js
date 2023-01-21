@@ -91,13 +91,16 @@ function main(is_post, e) {
         const previous_log_entries = query_as_string(lookup.log.user_id, user_id);
         const now = new Date();
 
+        var was_checkin;
         let previous_checkin = now;
         for (const signin_row of previous_log_entries) {
-            const was_checkin = get_value(lookup.log.checked_in, signin_row);
+            was_checkin = get_value(lookup.log.checked_in, signin_row);
             if (was_checkin === true) previous_checkin = new Date(get_value(lookup.log.datetime, signin_row).toString());
             else previous_checkin = now;
         }
-        const duration_seconds = (now.valueOf() - previous_checkin.valueOf()) / 1000;
+        let duration_seconds = (now.valueOf() - previous_checkin.valueOf()) / 1000;
+
+        if(!was_checkin) duration_seconds = 0;
 
         let weekday = "narnia";
         switch (now.getDay()) {
