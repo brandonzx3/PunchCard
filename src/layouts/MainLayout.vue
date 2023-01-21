@@ -150,7 +150,7 @@ export default defineComponent({
 					Dialog.create({
 						title: "User Data",
 						html: true,
-						message: op.result.length == 0 ? "somehting went wrong" : (sorted.map(user => `${user.full_name}: ${user.total_hours} hours`).join("<br/>")),
+						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length} <br/><br/>` + sorted.map(user => `${user.full_name}: ${user.total_hours} hours`).join("<br/>"),
 					});
 				} else {
 					this.get_student_error = op.error;
