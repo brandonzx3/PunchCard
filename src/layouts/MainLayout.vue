@@ -150,7 +150,16 @@ export default defineComponent({
 					Dialog.create({
 						title: "Student Data",
 						html: true,
-						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length}` + sorted.map(user => `<div style="background-color:#eaecee;  border-radius: 25px; padding: 10px; margin-top: 10px;">${user.full_name}:<br/>User ID: ${user.user_id}<br/>Total Hours ${user.total_hours}</div>`).join(""),
+						fullWidth: true,
+						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length}` + 
+							`<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 20px;">` +
+							sorted.map(user => `
+							<div style="background-color:#eaecee;  border-radius: 25px; padding: 10px;">
+								<p style="text-align: center; margin: 0px;">${user.full_name}</p>
+								<p style="text-align: center; margin: 0px;">User ID: ${user.user_id}</p>
+								<p style="text-align: center; margin: 0px;">Total Hours: ${user.total_hours}</p>
+							</div>
+							`).join("") + `</div>`,
 					});
 				} else {
 					this.get_student_error = op.error;
