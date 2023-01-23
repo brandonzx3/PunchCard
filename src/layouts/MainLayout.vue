@@ -152,9 +152,9 @@ export default defineComponent({
 						html: true,
 						fullWidth: true,
 						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length}` + 
-							`<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 20px;">` +
+							`<div style="display: flex; display: flex; flex-flow: row wrap; gap: 0.5em; overflow: hidden auto; width: 100%; justify-content: center;">` +
 							sorted.map(user => `
-							<div style="background-color:#eaecee;  border-radius: 25px; padding: 10px;">
+							<div style="background-color:#eaecee;  border-radius: 25px; padding: 10px 2em; min-width: max-content;  width: 20%; flex-grow: 1000000;">
 								<p style="text-align: center; margin: 0px;">${user.full_name}</p>
 								<p style="text-align: center; margin: 0px;">User ID: ${user.user_id}</p>
 								<p style="text-align: center; margin: 0px;">Total Hours: ${user.total_hours}</p>
