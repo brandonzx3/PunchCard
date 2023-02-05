@@ -1,4 +1,4 @@
-if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "5") throw new Error("hardlock diff");
+if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "6") throw new Error("hardlock diff");
 
 function main(is_post, e) {
 
@@ -88,9 +88,10 @@ function main(is_post, e) {
     function append_log(user_id) {
         const user = get_user(user_id);
         if (user == null) throw "Tried to create a log entry for a user that doesn't exist";
-        const previous_log_entries = query_as_string(lookup.log.user_id, user_id);
         const now = new Date();
 
+        //Relics of the past
+        /*const previous_log_entries = query_as_string(lookup.log.user_id, user_id);
         var was_checkin;
         let previous_checkin = now;
         for (const signin_row of previous_log_entries) {
@@ -100,7 +101,18 @@ function main(is_post, e) {
         }
         let duration_seconds = (now.valueOf() - previous_checkin.valueOf()) / 1000;
 
-        if(!was_checkin) duration_seconds = 0;
+        if(!was_checkin) duration_seconds = 0;*/
+
+        let duration_seconds = 0;
+        if (!user.checked_in) {
+            try {
+                duration_seconds = (now.valueOf() - (new Date(user.last_log_datetime)).valueOf()) / 1000;
+            } catch(e) {
+                console.log(e); //idk if we can even view these ._ .
+                duration_seconds = 0;
+            }
+        }
+
 
         let weekday = "narnia";
         switch (now.getDay()) {

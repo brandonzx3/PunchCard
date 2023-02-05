@@ -82,6 +82,7 @@ export default defineComponent({
       }
       finally {
         this.loading_handle--;
+        console.log(this.state.user);
       }
     },
 
