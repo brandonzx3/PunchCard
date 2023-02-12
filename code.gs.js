@@ -113,6 +113,9 @@ function main(is_post, e) {
             }
         }
 
+        if(duration_seconds > 9*60*60) { // check if duration seconds is over 9 hours so we have to fix people not signing out less
+            duration_seconds = 9*60*60;
+        }
 
         let weekday = "narnia";
         switch (now.getDay()) {

@@ -41,11 +41,11 @@
 					<q-btn @click="get_checkedin" color="primary" :loading="loading_handle > 0">See Checked-In Users</q-btn>
 					<span style="color:red" v-if="get_checkin_error != null">{{get_checkin_error}}</span>
 
-					<q-btn style="margin-top: 16px" @click="end_practice"  color="primary" :loading="loading_handle > 0">End Practice</q-btn>
-					<span style="color:red" v-if="end_practice_error != null">{{end_practice_error}}</span>
-
 					<q-btn style="margin-top: 16px" @click="get_students"  color="primary" :loading="loading_handle > 0">Get User Data</q-btn>
 					<span style="color:red" v-if="get_student_error != null">{{get_student_error}}</span>
+
+					<q-btn style="margin-top: 16px" @click="end_practice"  color="red" :loading="loading_handle > 0">End Practice</q-btn>
+					<span style="color:red" v-if="end_practice_error != null">{{end_practice_error}}</span>
 				</template>
 			</div>
 

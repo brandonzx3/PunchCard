@@ -74,6 +74,7 @@ export default defineComponent({
           this.state.user = login.result;
           this.state.logged_in = true;
           localStorage.setItem("user", id);
+          this.input_id = "";
         } else {
           this.login_error = login.error;
         }
