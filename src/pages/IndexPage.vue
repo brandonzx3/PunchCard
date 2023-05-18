@@ -25,6 +25,7 @@ import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
 
 async function poll_user() {
+  console.log("polling user");
   if(state.user != null) {
     try {
       const login = await fetch(state.endpoint + `?action=get_user&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
@@ -138,6 +139,7 @@ export default defineComponent({
         this.loading_handle--;
       }
     }
+    setTimeout(poll_loop, 1000 * 60);
   }
 })
 </script>
