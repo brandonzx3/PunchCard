@@ -1,4 +1,4 @@
-if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "7") throw new Error("hardlock diff");
+if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "8") throw new Error("hardlock diff");
 
 function main(is_post, e) {
 
@@ -143,9 +143,6 @@ function main(is_post, e) {
     function toggle_checkin(user) {
         user.checked_in = typeof user.checked_in === "boolean" ? !user.checked_in : true;
         set_value(lookup.users.checked_in, user.row, user.checked_in);
-        if(user.checked_in) {
-            set_value(lookup.users.num_checkins, user.row, user.num_checkins + 1);
-        }
         append_log(user.user_id);
         return user;
     }
