@@ -159,7 +159,7 @@ export default defineComponent({
 								<p style="text-align: center; margin: 0px;">User ID: ${user.user_id}</p>
 								<p style="text-align: center; margin: 0px;">Total Hours: ${user.total_hours}</p>
 								<p style="text-align: center; margin: 0px;">Total Check-ins: ${user.num_checkins}</p>
-								<p style="text-align: center; margin: 0px;">Average Time Per Check-in: ${user.total_hours / user.num_checkins} Hours</p>
+								<p style="text-align: center; margin: 0px;">Average Time Per Check-in: ${Math.floor(user.total_hours / user.num_checkins)} Hours</p>
 							</div>
 							`).join("") + `</div>`,
 					});
