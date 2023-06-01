@@ -97,7 +97,7 @@ export default defineComponent({
 			this.clear_errors();
 			this.loading_handle++;
 			try {
-				const op = await fetch(state.endpoint + `?action=end_practice&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
+				const op = await fetch(state.endpoint + `?action=end_practice&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
 				if (op.success) {
 					for (const user of op.result) {
 						if (user.user_id === state.user.user_id) state.user = user;
@@ -121,7 +121,7 @@ export default defineComponent({
 			this.clear_errors()
 			this.loading_handle++;
 			try {
-				const op = await fetch(state.endpoint + `?action=get_checkedin&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
+				const op = await fetch(state.endpoint + `?action=get_checkedin&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
 				if (op.success) {
 					Dialog.create({
 						title: "Checked-In Users",
@@ -142,7 +142,7 @@ export default defineComponent({
 			this.clear_errors()
 			this.loading_handle++;
 			try {
-				const op = await fetch(state.endpoint + `?action=get_students&user_id=${encodeURIComponent(state.user_id)}`).then(res => res.json());
+				const op = await fetch(state.endpoint + `?action=get_students&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
 				if (op.success) {
 					let sorted = op.result.sort((a, b) => {
 						return b.total_hours - a.total_hours
