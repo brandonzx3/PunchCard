@@ -163,6 +163,11 @@ try {
           },
   
           end_practice: function(e) {
+            if (e.parameters.user_id == null) throw "Did not specify user_id parameter";
+            const user = get_user(e.parameters.user_id.toString());
+            if (user == null) throw "Invalid permissions";
+            if(!user.is_coach) throw "Invalid permissions"
+
               const checked_in_users = query(lookup.users.checked_in, true);
               const checked_out_users = checked_in_users
                   .map(row => get_user_by_row(row))
@@ -171,16 +176,31 @@ try {
           },
   
           get_checkedin: function(e) {
+            if (e.parameters.user_id == null) throw "Did not specify user_id parameter";
+            const user = get_user(e.parameters.user_id.toString());
+            if (user == null) throw "Invalid permissions";
+            if(!user.is_coach) throw "Invalid permissions"
+              
               return query(lookup.users.checked_in, true)
                   .map(row => get_user_by_row(row))
           },
   
           get_students: function(e) {
+            if (e.parameters.user_id == null) throw "Did not specify user_id parameter";
+            const user = get_user(e.parameters.user_id.toString());
+            if (user == null) throw "Invalid permissions";
+            if(!user.is_coach) throw "Invalid permissions"
+            
               return query(lookup.users.is_coach, false)
                   .map(row => get_user_by_row(row))
           },
   
           get_coaches: function(e) {
+            if (e.parameters.user_id == null) throw "Did not specify user_id parameter";
+            const user = get_user(e.parameters.user_id.toString());
+            if (user == null) throw "Invalid permissions";
+            if(!user.is_coach) throw "Invalid permissions"
+
               return query(lookup.users.is_coach, true)
                   .map(row => get_user_by_row(row))
           },
@@ -210,6 +230,6 @@ try {
   function doGet(e) { return main(false, e); }
   function doPost(e) { return main(true, e); }
   } catch(e) {
-    MailApp.sendEmail("brandonzx3Error@gmail.com", "punchcard error", e.toString());
+    MailApp.sendEmail("brandonzx3Error@gmail.com", `punchcard error ${(new Date).toLocaleString()}`, e.toString());
     throw new Error(e);
   }
