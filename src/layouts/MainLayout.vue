@@ -26,7 +26,7 @@
 			v-if="state.user != null"
 		>
 			<div id="drawer">
-				<h5 style="text-align: center; margin: 0;">{{state.user.display_name}}</h5>
+				<h5 style="text-align: center; margin: 0;">{{state.user.first_name}}</h5>
 				<p style="color: gray; text-align: center; margin-bottom: 0;">User ID: {{state.user.user_id}}</p>
 				<p style="color: gray; text-align: center;">
 					Total Time: 
