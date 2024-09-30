@@ -1,5 +1,5 @@
 try {
-    if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "10") throw new Error("hardlock diff");
+    if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "11") throw new Error("hardlock diff");
   
     function main(is_post, e) {
 
