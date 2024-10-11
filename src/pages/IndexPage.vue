@@ -38,11 +38,6 @@ async function poll_user() {
   }
 }
 
-async function poll_loop() {
-  poll_user();
-  setTimeout(poll_loop, 1000 * 60);
-}
-
 export default defineComponent({
   name: "IndexPage",
   data() { return {
@@ -139,7 +134,7 @@ export default defineComponent({
         this.loading_handle--;
       }
     }
-    setTimeout(poll_loop, 1000 * 60);
+    setInterval(poll_user, 1000 * 60);
   }
 })
 </script>
