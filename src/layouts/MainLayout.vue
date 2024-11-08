@@ -152,11 +152,10 @@ export default defineComponent({
 						html: true,
 						fullWidth: true,
 						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length}` + 
-							`<div style="display: flex; display: flex; flex-flow: row wrap; gap: 0.5em; overflow: hidden auto; width: 100%; justify-content: center;">` +
+							`<div style="display: flex; display: flex; flex-flow: row wrap; gap: 1.4em; overflow: hidden auto; width: 100%; justify-content: center;">` +
 							sorted.map(user => `
-							<div style="background-color:#eaecee;  border-radius: 25px; padding: 10px 2em; min-width: max-content;  width: 20%; flex-grow: 1000000;">
-								<p style="text-align: center; margin: 0px;">${user.full_name}</p>
-								<p style="text-align: center; margin: 0px;">User ID: ${user.user_id}</p>
+							<div style="background-color:#eaecee; font-size: large; border-radius: 25px; padding: 10px 2em; width: 20%;">
+								<p style="text-align: center; margin: 0px; font-weight: bold;">${user.full_name}</p>
 								<p style="text-align: center; margin: 0px;">Total Hours: ${user.total_hours}</p>
 								<p style="text-align: center; margin: 0px;">Total Check-ins: ${user.num_checkins}</p>
 								<p style="text-align: center; margin: 0px;">Average Time Per Check-in: ${Math.floor(user.total_hours / user.num_checkins)} Hours</p>

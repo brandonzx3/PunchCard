@@ -9,7 +9,7 @@
 
   <q-page class="flex flex-center column" v-if="state.user == null">
     <h4>Ironclad Attendance</h4>
-    <q-input :error="input_id_error != null" :error-message="input_id_error" :disable="loading_handle > 0" label="Student ID" v-model="input_id" />
+    <q-input :error="input_id_error != null" :error-message="input_id_error" :disable="loading_handle > 0" style="width: 13em;" label="Student ID (last 4 Digits)" v-model="input_id" />
     <q-btn :loading="loading_handle > 0" style="margin-top: 1em;" color="primary" @click="login">Log In</q-btn>
     <span style="color:red" v-if="login_error != null">{{login_error}}</span>
   </q-page>
