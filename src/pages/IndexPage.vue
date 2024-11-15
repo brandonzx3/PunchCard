@@ -130,7 +130,7 @@ export default defineComponent({
 				cancel: true,
 				persistent: true
 			}).onOk(data => {
-        		fetch(state.endpoint + `?action=set_email&user_id=${encodeURIComponent(localStorage.getItem("user"))}&email=${encodeURIComponent(data)}`).then(res => res.json());
+        		fetch(state.endpoint + `?action=set_email&user_id=${encodeURIComponent(state.user.user_id)}&email=${encodeURIComponent(data)}`).then(res => res.json());
 			})
 		}
 	}
