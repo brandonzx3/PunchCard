@@ -1,5 +1,5 @@
 try {
-    if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "11") throw new Error("hardlock diff");
+    if (PropertiesService.getScriptProperties().getProperty("hardlock") !== "14") throw new Error("hardlock diff");
   
     function main(is_post, e) {
 
@@ -148,6 +148,10 @@ try {
             return user;
         }
 
+		function set_email(user, email) {
+			set_value(lookup.users.email, user.row, email)
+		}
+
         const get_actions = {
 
             get_user: function(e) {
@@ -204,6 +208,15 @@ try {
                 return query(lookup.users.is_coach, true)
                     .map(row => get_user_by_row(row))
             },
+
+			set_email: function(e) {
+				if(e.parameters.user_id == null) throw "Did not specify user_id parameter";
+				if(e.parameters.email == null) throw "Did not specify email"
+				const user = get_user(e.parameters.user_id.toString());
+				const email = e.parameters.email.toString();
+				set_email(user, email);
+				return user;
+			}
         };
         const post_actions = {
             

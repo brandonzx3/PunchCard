@@ -23,6 +23,7 @@ import { defineComponent } from 'vue';
 import state from "../state.js";
 import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
+import { Dialog } from 'quasar';
 
 async function poll_user() {
   console.log("polling user");
@@ -80,6 +81,7 @@ export default defineComponent({
       finally {
         this.loading_handle--;
         console.log(this.state.user);
+		this.check_email();
       }
     },
 
@@ -114,6 +116,24 @@ export default defineComponent({
       this.checkin_error = null;
       this.input_id_error = null;
     },
+
+	check_email() {
+		if(state.user != null && state.user.email == "") {
+			Dialog.create({
+				title: 'Email Needed!',
+				message: 'Please provide your personal email below',
+				prompt: {
+					model: '',
+					isValid: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+					type: 'text'
+				},
+				cancel: true,
+				persistent: true
+			}).onOk(data => {
+        		fetch(state.endpoint + `?action=set_email&user_id=${encodeURIComponent(localStorage.getItem("user"))}&email=${encodeURIComponent(data)}`).then(res => res.json());
+			})
+		}
+	}
   },
   
   async created () {
@@ -132,6 +152,8 @@ export default defineComponent({
       }
       finally {
         this.loading_handle--;
+		console.log(this.state.user);
+		this.check_email();
       }
     }
     setInterval(poll_user, 1000 * 60);
