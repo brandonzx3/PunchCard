@@ -127,7 +127,7 @@ export default defineComponent({
 					isValid: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
 					type: 'text'
 				},
-				cancel: true,
+				cancel: false,
 				persistent: true
 			}).onOk(data => {
         		fetch(state.endpoint + `?action=set_email&user_id=${encodeURIComponent(state.user.user_id)}&email=${encodeURIComponent(data)}`).then(res => res.json());
