@@ -121,7 +121,8 @@ export default defineComponent({
 		if(state.user != null && state.user.email == "") {
 			Dialog.create({
 				title: 'Email Needed!',
-				message: 'Please provide your personal email below',
+				message: 'Please provide your <b>personal</b> email below',
+        html: true,
 				prompt: {
 					model: '',
 					isValid: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
