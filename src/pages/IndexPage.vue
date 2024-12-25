@@ -23,7 +23,7 @@ import { defineComponent } from 'vue';
 import state from "../state.js";
 import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
-import { Dialog } from 'quasar';
+import { Dialog, Notify } from 'quasar';
 
 async function poll_user() {
     console.log("polling user");
@@ -91,16 +91,20 @@ export default defineComponent({
         async checkin() {
             this.clear_errors();
             this.loading_handle++;
+            this.$refs.checkin_sound.volume = 0.1;
+            this.$refs.checkout_sound.volume = 0.1;
             try {
                 const checkin = await fetch(state.endpoint + `?action=toggle_checkin&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
                 if (checkin.success) {
                     this.state.user = checkin.result;
-                    poll_user();
                     if (this.state.user.checked_in) {
-                        this.$refs.checkin_sound.volume = 0.1;
+                        Notify.create({
+                            message: "Please remember to check out",
+                            color: "blue",
+                            progress: true
+                        });
                         this.$refs.checkin_sound.play();
                     } else {
-                        this.$refs.checkout_sound.volume = 0.1;
                         this.$refs.checkout_sound.play();
                     }
                 } else {
