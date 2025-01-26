@@ -9,7 +9,7 @@
 					icon="menu"
 					aria-label="Menu"
 					@click="toggleLeftDrawer"
-					v-if="state.user != null"
+					v-if="person != null"
 				/>
 
 				<q-toolbar-title>
@@ -23,30 +23,15 @@
 		<q-drawer
 			v-model="leftDrawerOpen"
 			bordered
-			v-if="state.user != null"
+			v-if="person != null"
 		>
 			<div id="drawer">
-				<h5 style="text-align: center; margin: 0;">{{state.user.first_name}}</h5>
-				<p style="color: gray; text-align: center; margin-bottom: 0;">User ID: {{state.user.user_id}}</p>
-				<p style="color: gray; text-align: center;">
-					Total Time: 
-					{{state.user.total_hours}} Hours, 
-					{{Math.floor((state.user.total_seconds - (state.user.total_hours * 3600)) / 60)}} Minutes, 
-					{{state.user.total_seconds - (state.user.total_hours * 3600) - (Math.floor((state.user.total_seconds - (state.user.total_hours * 3600)) / 60) * 60)}} Seconds
+				<h5 style="text-align: center; margin: 0;">{{person.first_name}}</h5>
+				<p style="color: gray; text-align: center; margin-bottom: 0;">User ID: {{person.person_id}}</p>
+				<p style="color: gray; text-align: center; white-space: pre-line;">
+					Total Time: {{ total_time }}
 				</p>
-				<q-btn color="red" @click="logout">log out</q-btn>
-				<template v-if="state.user.is_coach" >
-					<h6 style="margin: 1em">Coach &amp; Mentor Settings</h6>
-					<a style="margin-bottom: 16px;" href="https://script.google.com/home/projects/15PbQQR0Ac9YbxxnsoQcv2ly1muj_BP14BZTdmXTI_mBFT1iB922V23eq">Backend Analytics</a>
-					<q-btn @click="get_checkedin" color="primary" :loading="loading_handle > 0">See Checked-In Users</q-btn>
-					<span style="color:red" v-if="get_checkin_error != null">{{get_checkin_error}}</span>
-
-					<q-btn style="margin-top: 16px" @click="get_students"  color="primary" :loading="loading_handle > 0">Get Timecard Data</q-btn>
-					<span style="color:red" v-if="get_student_error != null">{{get_student_error}}</span>
-
-					<q-btn style="margin-top: 16px" @click="end_practice"  color="red" :loading="loading_handle > 0">End Practice</q-btn>
-					<span style="color:red" v-if="end_practice_error != null">{{end_practice_error}}</span>
-				</template>
+				<q-btn color="red" @click="logout">Log Out</q-btn>
 			</div>
 
 		</q-drawer>
@@ -69,14 +54,21 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import state from "../state.js";
+import { person_id, person, login_status, PB_Punches, i_am_checked_in, total_ms } from "../state.js";
 import { Dialog } from "quasar";
 
 export default defineComponent({
 	name: 'MainLayout',
 	
 	computed: {
-		state() { return state; }
+		total_time() {
+			const seconds = Math.floor(this.total_ms / 1000);
+			const minutes = Math.floor(seconds / 60);
+			const hours = Math.floor(minutes / 60);
+			const remainingSeconds = seconds % 60;
+			const remainingMinutes = minutes % 60;
+			return `\nHours: ${hours}\nMinutes: ${remainingMinutes}\nSeconds: ${remainingSeconds}`;			
+		}
 	},
 
 	data() { return {
@@ -84,13 +76,14 @@ export default defineComponent({
 		end_practice_error: null,
 		get_checkin_error: null,
 		get_student_error: null,
+		person,
+		person_id,
+		total_ms,
 	} },
 
 	methods: {
 		async logout() {
-			this.state.user = null;
-			this.state.logged_in = false;
-			localStorage.clear();
+			this.person_id = null;
 		},
 
 		async end_practice() {
