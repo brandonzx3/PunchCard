@@ -45,11 +45,15 @@ export default defineComponent({
             cheeky_startup_delay_finished: false,
             i_am_checked_in,
             total_ms,
+            checkin_notification: null,
         }
     },
 
     created() {
         setTimeout(() => this.cheeky_startup_delay_finished = true, 150);
+        if("Notification" in window) {
+            Notification.requestPermission();
+        }
     },
 
     computed: {
@@ -94,6 +98,14 @@ export default defineComponent({
                 this.checkin_error = e.toString() + "\n" + e.stack;
             } finally {
                 this.loading_handle--;
+            }
+
+            if(this.i_am_checked_in) {
+                this.checkin_notification = new Notification("PunchCard", {body: "you have checked in", tag: "checkin", silent: true});
+            } else {
+                if(this.checkin_notification !== null) {
+                    this.checkin_notification.close();
+                }
             }
         },
 
