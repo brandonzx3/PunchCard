@@ -32,6 +32,7 @@
 					Total Time: {{ total_time }}
 				</p>
 				<q-btn color="red" @click="logout">Log Out</q-btn>
+				<q-btn style="margin-top: 1em" color="primary" v-if="i_am_administrator" @click="openAdminPanel">Admin Panel</q-btn>
 			</div>
 
 		</q-drawer>
@@ -54,7 +55,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { person_id, person, login_status, PB_Punches, i_am_checked_in, total_ms } from "../state.js";
+import { person_id, my_person, login_status, PB_Punches, i_am_checked_in, total_ms, i_am_administrator } from "../state.js";
 import { Dialog } from "quasar";
 
 export default defineComponent({
@@ -67,7 +68,7 @@ export default defineComponent({
 			const hours = Math.floor(minutes / 60);
 			const remainingSeconds = seconds % 60;
 			const remainingMinutes = minutes % 60;
-			return `\nHours: ${hours}\nMinutes: ${remainingMinutes}\nSeconds: ${remainingSeconds}`;			
+			return `${hours} Hours ${remainingMinutes} minutes ${remainingSeconds} seconds`;			
 		}
 	},
 
@@ -76,100 +77,20 @@ export default defineComponent({
 		end_practice_error: null,
 		get_checkin_error: null,
 		get_student_error: null,
-		person,
+		person: my_person,
 		person_id,
 		total_ms,
+		i_am_administrator,
 	} },
 
 	methods: {
-		async logout() {
+		logout() {
 			this.person_id = null;
+			this.$router.push("/");
 		},
 
-		async end_practice() {
-			this.clear_errors();
-			this.loading_handle++;
-			try {
-				const op = await fetch(state.endpoint + `?action=end_practice&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
-				if (op.success) {
-					for (const user of op.result) {
-						if (user.user_id === state.user.user_id) state.user = user;
-					}
-					Dialog.create({
-						title: "Practice ended",
-						message: op.result.length == 0 ? "Nobody was checked out" : ("The following students were signed out: " + op.result.map(user => user.full_name).join("; ")),
-					});
-				} else {
-					this.end_practice_error = op.error;
-				}
-			} catch(e) {
-				console.log(e);
-				this.error = e.toString() + "\n" + e.stack;
-			} finally {
-				this.loading_handle--;
-			}
-		},
-
-		async get_checkedin() {
-			this.clear_errors()
-			this.loading_handle++;
-			try {
-				const op = await fetch(state.endpoint + `?action=get_checkedin&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
-				if (op.success) {
-					Dialog.create({
-						title: "Checked-In Users",
-						message: op.result.length == 0 ? "No one is signed in." : ("The following students are signed in: " + op.result.map(user => user.full_name).join("; ")),
-					});
-				} else {
-					this.get_checkin_error = op.error;
-				} 
-			} catch(e) {
-				console.log(e);
-				this.error = e.toString() + "\n" + e.stack;
-			} finally {
-				this.loading_handle--;
-			}
-		},
-
-		async get_students() {
-			this.clear_errors()
-			this.loading_handle++;
-			try {
-				const op = await fetch(state.endpoint + `?action=get_students&user_id=${encodeURIComponent(state.user.user_id)}`).then(res => res.json());
-				if (op.success) {
-					let sorted = op.result.sort((a, b) => {
-						return b.total_hours - a.total_hours
-					});
-					Dialog.create({
-						title: "Student Data",
-						html: true,
-						fullWidth: true,
-						message: op.result.length == 0 ? "somehting went wrong" :`Number of Students: ${sorted.length}` + 
-							`<div style="display: flex; display: flex; flex-flow: row wrap; gap: 1.4em; overflow: hidden auto; width: 100%; justify-content: center;">` +
-							sorted.map(user => `
-							<div style="background-color:#eaecee; font-size: large; border-radius: 25px; padding: 10px 2em; width: 20%;">
-								<p style="text-align: center; margin: 0px; font-weight: bold;">${user.full_name}</p>
-								<p style="text-align: center; margin: 0px;">Total Hours: ${user.total_hours}</p>
-								<p style="text-align: center; margin: 0px;">Total Check-ins: ${user.num_checkins}</p>
-								<p style="text-align: center; margin: 0px;">Average Time Per Check-in: ${Math.floor(user.total_hours / user.num_checkins)} Hours</p>
-							</div>
-							`).join("") + `</div>`,
-					});
-				} else {
-					this.get_student_error = op.error;
-				} 
-			} catch(e) {
-				console.log(e);
-				this.error = e.toString() + "\n" + e.stack;
-			} finally {
-				this.loading_handle--;
-			}
-		},
-
-		clear_errors() {
-			this.end_practice_error = null;
-			this.get_checkin_error = null;
-			this.get_student_error = null;
+		openAdminPanel() {
+			this.$router.push("admin");
 		}
 	},
 

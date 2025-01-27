@@ -22,7 +22,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { PB, EMAIL_REGEX, person_id, person, login_status, PB_Punches, i_am_checked_in, total_ms, FULL_LOGIN_PREFIX } from "../state.js";
+import { PB, EMAIL_REGEX, person_id, my_person, login_status, PB_Punches, i_am_checked_in, total_ms, FULL_LOGIN_PREFIX, i_am_administrator } from "../state.js";
 import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
 import { Dialog, Notify } from 'quasar';
@@ -40,7 +40,7 @@ export default defineComponent({
             checkin_sound_url,
             checkout_sound_url,
             person_id,
-            person,
+            person: my_person,
             login_status,
             cheeky_startup_delay_finished: false,
             i_am_checked_in,
@@ -78,7 +78,6 @@ export default defineComponent({
                 }
             } else {
                 this.person_id = id;
-                this.check_email();
             }
         },
 
