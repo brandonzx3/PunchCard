@@ -22,7 +22,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { PB, EMAIL_REGEX, person_id, my_person, login_status, PB_Punches, i_am_checked_in, total_ms, FULL_LOGIN_PREFIX, i_am_administrator } from "../state.js";
+import { PB, EMAIL_REGEX, person_id, my_person, login_status, PB_Punches, i_am_checked_in, total_ms, FULL_LOGIN_PREFIX, i_am_administrator, PB_People } from "../state.js";
 import checkin_sound_url from "../assets/touchswitch.mp3";
 import checkout_sound_url from "../assets/gate_close.mp3";
 import { Dialog, Notify } from 'quasar';
@@ -54,6 +54,8 @@ export default defineComponent({
         if("Notification" in window) {
             Notification.requestPermission();
         }
+
+        setTimeout(() => this.check_email(), 200);
     },
 
     computed: {
@@ -83,6 +85,7 @@ export default defineComponent({
             } else {
                 this.person_id = id;
             }
+            setTimeout(() => this.check_email(), 200);
         },
 
         async checkin() {
@@ -116,21 +119,20 @@ export default defineComponent({
         },
 
         check_email() {
-            if (this.person_id != null) {
-                console.log(this.person.first_name)
+            if (this.person_id != null && this.person.email === "") {
                 Dialog.create({
                     title: 'Email Needed!',
                     message: 'Please provide your <b>personal</b> email below',
                     html: true,
                     prompt: {
                         model: '',
-                        isValid: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+                        isValid: val => EMAIL_REGEX.test(val),
                         type: 'text'
                     },
                     cancel: false,
                     persistent: true
                 }).onOk(data => {
-                    console.log(data);
+                    PB_People.update(this.person.id, {email: data});
                 })
             }
         }
