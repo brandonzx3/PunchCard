@@ -47,7 +47,7 @@
 
                     <q-card-actions align="right">
                         <q-btn flat label="Cancel" color="primary" @click="adduser = false" />
-                        <q-btn flat label="Add User" color="primary" type="submit" @click="add_new_user"/>
+                        <q-btn flat label="Add User" color="primary" type="submit"/>
                     </q-card-actions>
                 </q-form>
             </q-card-section>
@@ -189,7 +189,18 @@
                     "last_name": this.new_user_last_name.trim()
                 }
 
-                const record = await PB_People.create(data);
+                try {
+                    const record = await PB_People.create(data);
+                } catch(e) {
+                    console.log(e);
+
+                    Notify.create({
+                        message: 'Failed to add user to DB',
+                        color: 'negative',
+                        icon: 'warning'
+                    });
+                    return;
+                }
                 
                 this.new_user_id = null;
                 this.new_user_first_name = '';
